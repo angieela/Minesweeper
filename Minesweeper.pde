@@ -1,9 +1,9 @@
 import de.bezier.guido.*;
 //Declare and initialize constants NUM_ROWS and NUM_COLS = 20
-public final static int NUM_ROWS = 20;
-public final static int NUM_COLS = 20;
+public final static int NUM_ROWS = 5;
+public final static int NUM_COLS = 5;
 private MSButton[][] buttons; //2d array of minesweeper buttons
-private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
+private ArrayList <MSButton> mines = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
 void setup ()
 {
@@ -15,15 +15,23 @@ void setup ()
     
     //your code to initialize buttons goes here
     buttons = new MSButton[NUM_ROWS][NUM_COLS];
-    for(int r = 0; r < NUM_ROWS; r++)
-      for(int c = 0; c < NUM_COLS; c++)
-        buttons[r][c] = new MSButton(r,c);
+    for(int row = 0; row < NUM_ROWS; row++)
+      for(int col = 0; col < NUM_COLS; col++)
+        buttons[row][col] = new MSButton(row,col);
     
     setMines();
 }
 public void setMines()
 {
-    //your code
+    int r = 0;
+    int c = 0;
+    for(int i = 0; i < 5; i++){
+      r = (int)(Math.random()*NUM_ROWS);
+      c = (int)(Math.random()*NUM_COLS);
+    if(!mines.contains(buttons[r][c])){
+      mines.add(buttons[r][c]);
+    }
+   }
 }
 
 public void draw ()
@@ -47,13 +55,21 @@ public void displayWinningMessage()
 }
 public boolean isValid(int r, int c)
 {
-    //your code here
+    if(r < NUM_ROWS && r >= 0 && c >= 0 && c < NUM_COLS)
+      return true;
     return false;
 }
 public int countMines(int row, int col)
 {
     int numMines = 0;
-    //your code here
+    for(int a = row-1; a < row+1; a++){
+      for(int b = col-1; b < col+1; b++){
+          if(isValid(a,b) == true && mines.contains(buttons[a][b]))
+            numMines++;
+      }
+    }
+    if(mines.contains(buttons[row][col])== true)
+      numMines--;
     return numMines;
 }
 public class MSButton
@@ -81,13 +97,21 @@ public class MSButton
     {
         clicked = true;
         //your code here
+        if(mouseButton == RIGHT){
+          if(flagged == true){
+            flagged = false;
+            clicked = false;
+          }else{
+             flagged = true;
+          }
+        }
     }
     public void draw () 
     {   
         if (flagged)
             fill(0);
-        // else if( clicked && mines.contains(this) ) 
-        //     fill(255,0,0);
+         else if( clicked && mines.contains(this) ) 
+             fill(255,0,0);
         else if(clicked)
             fill( 200 );
         else 
