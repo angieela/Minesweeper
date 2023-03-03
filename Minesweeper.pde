@@ -42,16 +42,18 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    if(countMines(myRow,myCol) > 0)
+      return false;
+     else 
+       return true;
 }
 public void displayLosingMessage()
 {
-    //your code here
+    buttons[3][3].setLabel("haha u lost");
 }
 public void displayWinningMessage()
 {
-    //your code here
+    buttons[3][3].setLabel("haha u won ok so cool");
 }
 public boolean isValid(int r, int c)
 {
@@ -104,6 +106,12 @@ public class MSButton
           }else{
              flagged = true;
           }
+        }else if(mines.contains(this)){
+            displayLosingMessage();
+        }else if(countMines(myRow,myCol) > 0){
+           setLabel(countMines(myRow,myCol));
+        }else{
+          mousePressed();
         }
     }
     public void draw () 
@@ -120,9 +128,7 @@ public class MSButton
         rect(x, y, width, height);
         fill(0);
         text(myLabel,x+width/2,y+height/2);
-        for(int r = 0; r < NUM_ROWS; r++)
-          for(int c = 0; c < NUM_COLS; c++)
-            rect(x,y,20,20);
+
     }
     public void setLabel(String newLabel)
     {
